@@ -97,13 +97,13 @@ export const PromptToVideo: React.FC = () => {
   const { fps, width, height } = useVideoConfig();
 
   // Green gradient background (as specified in requirements)
-  const gradientRotation = interpolate(frame, [0, 300], [0, 360]);
-  const hue1 = interpolate(frame, [0, 300], [120, 160]); // Green hues
-  const hue2 = interpolate(frame, [0, 300], [100, 140]); // Green hues
+  const gradientRotation = interpolate(frame, [0, 450], [0, 360]);
+  const hue1 = interpolate(frame, [0, 450], [120, 160]); // Green hues
+  const hue2 = interpolate(frame, [0, 450], [100, 140]); // Green hues
 
-  // Scene 1: "Type a Prompt" (frames 0-90)
+  // Scene 1: "Type a Prompt" (frames 0-60)
   const scene1Opacity = interpolate(frame, [0, 20], [0, 1]);
-  const scene1Exit = interpolate(frame, [70, 90], [1, 0]);
+  const scene1Exit = interpolate(frame, [45, 60], [1, 0]);
   const scene1FinalOpacity = Math.min(scene1Opacity, scene1Exit);
 
   const promptSpring = spring({
@@ -120,19 +120,69 @@ export const PromptToVideo: React.FC = () => {
   // Typing cursor blink
   const cursorBlink = Math.floor(frame / 15) % 2;
 
-  // Scene 2: Transformation effect (frames 90-150)
-  const scene2Opacity = interpolate(frame, [85, 105], [0, 1]);
-  const scene2Exit = interpolate(frame, [140, 160], [1, 0]);
+  // Scene 2: Problem Statement (frames 60-120)
+  const scene2Opacity = interpolate(frame, [55, 75], [0, 1]);
+  const scene2Exit = interpolate(frame, [105, 120], [1, 0]);
   const scene2FinalOpacity = Math.min(scene2Opacity, scene2Exit);
 
-  const burstFrame = 95;
+  const problemSpring = spring({
+    frame: frame - 65,
+    fps,
+    config: {
+      damping: 80,
+    },
+  });
+
+  const problemScale = interpolate(problemSpring, [0, 1], [0.8, 1]);
+
+  // Scene 3: Transformation effect (frames 120-180)
+  const scene3Opacity = interpolate(frame, [115, 135], [0, 1]);
+  const scene3Exit = interpolate(frame, [165, 180], [1, 0]);
+  const scene3FinalOpacity = Math.min(scene3Opacity, scene3Exit);
+
+  const burstFrame = 125;
   const showBurst = frame >= burstFrame && frame < burstFrame + 60;
 
-  // Scene 3: Final reveal (frames 160-300)
-  const scene3Opacity = interpolate(frame, [150, 180], [0, 1]);
+  // Scene 4: Feature breakdown (frames 180-270)
+  const scene4Opacity = interpolate(frame, [175, 195], [0, 1]);
+  const scene4Exit = interpolate(frame, [255, 270], [1, 0]);
+  const scene4FinalOpacity = Math.min(scene4Opacity, scene4Exit);
+
+  const featureSpring = spring({
+    frame: frame - 185,
+    fps,
+    config: {
+      damping: 60,
+    },
+  });
+
+  const featureScale = interpolate(featureSpring, [0, 1], [0.5, 1]);
+
+  // Stagger animations for feature items
+  const feature1Opacity = interpolate(frame, [190, 205], [0, 1]);
+  const feature2Opacity = interpolate(frame, [205, 220], [0, 1]);
+  const feature3Opacity = interpolate(frame, [220, 235], [0, 1]);
+
+  // Scene 5: Benefits (frames 270-360)
+  const scene5Opacity = interpolate(frame, [265, 285], [0, 1]);
+  const scene5Exit = interpolate(frame, [345, 360], [1, 0]);
+  const scene5FinalOpacity = Math.min(scene5Opacity, scene5Exit);
+
+  const benefitSpring = spring({
+    frame: frame - 275,
+    fps,
+    config: {
+      damping: 70,
+    },
+  });
+
+  const benefitScale = interpolate(benefitSpring, [0, 1], [0.6, 1]);
+
+  // Scene 6: Final reveal (frames 360-450)
+  const scene6Opacity = interpolate(frame, [355, 380], [0, 1]);
 
   const videoSpring = spring({
-    frame: frame - 160,
+    frame: frame - 360,
     fps,
     config: {
       damping: 80,
@@ -161,9 +211,9 @@ export const PromptToVideo: React.FC = () => {
       }}
     >
       {/* Ambient glow orbs - green theme */}
-      <GlowOrb x={width * 0.2} y={height * 0.3} size={400} color="#10b981" delay={0} />
-      <GlowOrb x={width * 0.8} y={height * 0.7} size={500} color="#34d399" delay={15} />
-      <GlowOrb x={width * 0.5} y={height * 0.5} size={600} color="#059669" delay={30} />
+      <GlowOrb x={width * 0.2} y={height * 0.3} size={300} color="#10b981" delay={0} />
+      <GlowOrb x={width * 0.8} y={height * 0.7} size={350} color="#34d399" delay={15} />
+      <GlowOrb x={width * 0.5} y={height * 0.5} size={400} color="#059669" delay={30} />
 
       {/* Scene 1: Type a prompt */}
       <AbsoluteFill
@@ -181,9 +231,9 @@ export const PromptToVideo: React.FC = () => {
         >
           <div
             style={{
-              fontSize: 72,
+              fontSize: 52,
               color: "rgba(255, 255, 255, 0.8)",
-              marginBottom: 40,
+              marginBottom: 30,
               fontWeight: "400",
             }}
           >
@@ -191,12 +241,12 @@ export const PromptToVideo: React.FC = () => {
           </div>
           <div
             style={{
-              fontSize: 90,
+              fontSize: 70,
               fontWeight: "bold",
               color: "white",
-              padding: "30px 60px",
+              padding: "25px 50px",
               background: "rgba(255, 255, 255, 0.1)",
-              borderRadius: "24px",
+              borderRadius: "20px",
               backdropFilter: "blur(20px)",
               border: "2px solid rgba(255, 255, 255, 0.2)",
               boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
@@ -208,10 +258,59 @@ export const PromptToVideo: React.FC = () => {
         </div>
       </AbsoluteFill>
 
-      {/* Scene 2: Transformation burst */}
+      {/* Scene 2: Problem Statement */}
       <AbsoluteFill
         style={{
           opacity: scene2FinalOpacity,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "0 80px",
+        }}
+      >
+        <div
+          style={{
+            transform: `scale(${problemScale})`,
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 60,
+              fontWeight: "800",
+              color: "#34d399",
+              marginBottom: 40,
+            }}
+          >
+            The Challenge
+          </div>
+          <div
+            style={{
+              fontSize: 36,
+              color: "rgba(255, 255, 255, 0.9)",
+              lineHeight: 1.6,
+              fontWeight: "400",
+              background: "rgba(255, 255, 255, 0.08)",
+              padding: "40px 50px",
+              borderRadius: "20px",
+              backdropFilter: "blur(20px)",
+              border: "2px solid rgba(255, 255, 255, 0.15)",
+            }}
+          >
+            Manual sprint review prep takes hours
+            <br />
+            ⏰ Gathering updates from team
+            <br />
+            📊 Compiling progress reports
+            <br />
+            📧 Coordinating stakeholders
+          </div>
+        </div>
+      </AbsoluteFill>
+
+      {/* Scene 3: Transformation burst */}
+      <AbsoluteFill
+        style={{
+          opacity: scene3FinalOpacity,
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -232,7 +331,7 @@ export const PromptToVideo: React.FC = () => {
         )}
         <div
           style={{
-            fontSize: 140,
+            fontSize: 110,
             fontWeight: "900",
             background: "linear-gradient(135deg, #10b981 0%, #059669 50%, #34d399 100%)",
             WebkitBackgroundClip: "text",
@@ -245,10 +344,140 @@ export const PromptToVideo: React.FC = () => {
         </div>
       </AbsoluteFill>
 
-      {/* Scene 3: Video result */}
+      {/* Scene 4: Feature Breakdown */}
       <AbsoluteFill
         style={{
-          opacity: scene3Opacity,
+          opacity: scene4FinalOpacity,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "0 60px",
+        }}
+      >
+        <div
+          style={{
+            transform: `scale(${featureScale})`,
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 56,
+              fontWeight: "800",
+              background: "linear-gradient(135deg, #10b981 0%, #34d399 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              marginBottom: 50,
+            }}
+          >
+            Automation Features
+          </div>
+          <div style={{ textAlign: "left", maxWidth: "900px" }}>
+            <div
+              style={{
+                opacity: feature1Opacity,
+                fontSize: 34,
+                color: "white",
+                marginBottom: 30,
+                padding: "20px 30px",
+                background: "rgba(16, 185, 129, 0.15)",
+                borderRadius: "16px",
+                border: "2px solid rgba(16, 185, 129, 0.3)",
+                fontWeight: "500",
+              }}
+            >
+              ✅ Auto-collect team updates
+            </div>
+            <div
+              style={{
+                opacity: feature2Opacity,
+                fontSize: 34,
+                color: "white",
+                marginBottom: 30,
+                padding: "20px 30px",
+                background: "rgba(16, 185, 129, 0.15)",
+                borderRadius: "16px",
+                border: "2px solid rgba(16, 185, 129, 0.3)",
+                fontWeight: "500",
+              }}
+            >
+              📈 Generate progress metrics
+            </div>
+            <div
+              style={{
+                opacity: feature3Opacity,
+                fontSize: 34,
+                color: "white",
+                padding: "20px 30px",
+                background: "rgba(16, 185, 129, 0.15)",
+                borderRadius: "16px",
+                border: "2px solid rgba(16, 185, 129, 0.3)",
+                fontWeight: "500",
+              }}
+            >
+              🎯 Smart stakeholder alerts
+            </div>
+          </div>
+        </div>
+      </AbsoluteFill>
+
+      {/* Scene 5: Benefits */}
+      <AbsoluteFill
+        style={{
+          opacity: scene5FinalOpacity,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "0 80px",
+        }}
+      >
+        <div
+          style={{
+            transform: `scale(${benefitScale})`,
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 64,
+              fontWeight: "900",
+              background: "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              marginBottom: 50,
+            }}
+          >
+            The Result
+          </div>
+          <div
+            style={{
+              fontSize: 80,
+              fontWeight: "900",
+              color: "#10b981",
+              marginBottom: 30,
+            }}
+          >
+            80% Time Saved
+          </div>
+          <div
+            style={{
+              fontSize: 38,
+              color: "rgba(255, 255, 255, 0.9)",
+              lineHeight: 1.5,
+              fontWeight: "400",
+            }}
+          >
+            From hours of prep
+            <br />
+            to minutes of review
+          </div>
+        </div>
+      </AbsoluteFill>
+
+      {/* Scene 6: Final reveal */}
+      <AbsoluteFill
+        style={{
+          opacity: scene6Opacity,
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -274,7 +503,7 @@ export const PromptToVideo: React.FC = () => {
           <div
             style={{
               position: "relative",
-              padding: "60px 80px",
+              padding: "50px 60px",
               background: "rgba(255, 255, 255, 0.05)",
               borderRadius: "24px",
               backdropFilter: "blur(40px)",
@@ -284,13 +513,13 @@ export const PromptToVideo: React.FC = () => {
           >
             <div
               style={{
-                fontSize: 100,
+                fontSize: 80,
                 fontWeight: "900",
                 background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
-                marginBottom: 30,
+                marginBottom: 25,
                 textAlign: "center",
               }}
             >
@@ -298,7 +527,7 @@ export const PromptToVideo: React.FC = () => {
             </div>
             <div
               style={{
-                fontSize: 56,
+                fontSize: 44,
                 color: "rgba(255, 255, 255, 0.9)",
                 textAlign: "center",
                 fontWeight: "400",
@@ -312,8 +541,8 @@ export const PromptToVideo: React.FC = () => {
           {/* Bottom tagline */}
           <div
             style={{
-              marginTop: 60,
-              fontSize: 48,
+              marginTop: 50,
+              fontSize: 38,
               textAlign: "center",
               color: "rgba(255, 255, 255, 0.8)",
               fontWeight: "500",
