@@ -96,10 +96,10 @@ export const PromptToVideo: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
 
-  // Animated gradient background
+  // Green gradient background (as specified in requirements)
   const gradientRotation = interpolate(frame, [0, 300], [0, 360]);
-  const hue1 = interpolate(frame, [0, 300], [240, 320]);
-  const hue2 = interpolate(frame, [0, 300], [280, 360]);
+  const hue1 = interpolate(frame, [0, 300], [120, 160]); // Green hues
+  const hue2 = interpolate(frame, [0, 300], [100, 140]); // Green hues
 
   // Scene 1: "Type a Prompt" (frames 0-90)
   const scene1Opacity = interpolate(frame, [0, 20], [0, 1]);
@@ -160,10 +160,10 @@ export const PromptToVideo: React.FC = () => {
         overflow: "hidden",
       }}
     >
-      {/* Ambient glow orbs */}
-      <GlowOrb x={width * 0.2} y={height * 0.3} size={400} color="#8b5cf6" delay={0} />
-      <GlowOrb x={width * 0.8} y={height * 0.7} size={500} color="#ec4899" delay={15} />
-      <GlowOrb x={width * 0.5} y={height * 0.5} size={600} color="#3b82f6" delay={30} />
+      {/* Ambient glow orbs - green theme */}
+      <GlowOrb x={width * 0.2} y={height * 0.3} size={400} color="#10b981" delay={0} />
+      <GlowOrb x={width * 0.8} y={height * 0.7} size={500} color="#34d399" delay={15} />
+      <GlowOrb x={width * 0.5} y={height * 0.5} size={600} color="#059669" delay={30} />
 
       {/* Scene 1: Type a prompt */}
       <AbsoluteFill
@@ -181,17 +181,17 @@ export const PromptToVideo: React.FC = () => {
         >
           <div
             style={{
-              fontSize: 80,
-              color: "rgba(255, 255, 255, 0.7)",
+              fontSize: 72,
+              color: "rgba(255, 255, 255, 0.8)",
               marginBottom: 40,
-              fontWeight: "300",
+              fontWeight: "400",
             }}
           >
-            Type a prompt
+            Scrum Master Daily Tasks
           </div>
           <div
             style={{
-              fontSize: 100,
+              fontSize: 90,
               fontWeight: "bold",
               color: "white",
               padding: "30px 60px",
@@ -202,7 +202,7 @@ export const PromptToVideo: React.FC = () => {
               boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
             }}
           >
-            "Create a video"
+            "Sprint Review Prep"
             <span style={{ opacity: cursorBlink }}>|</span>
           </div>
         </div>
@@ -234,14 +234,14 @@ export const PromptToVideo: React.FC = () => {
           style={{
             fontSize: 140,
             fontWeight: "900",
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)",
+            background: "linear-gradient(135deg, #10b981 0%, #059669 50%, #34d399 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-            textShadow: "0 0 80px rgba(102, 126, 234, 0.8)",
+            textShadow: "0 0 80px rgba(16, 185, 129, 0.8)",
           }}
         >
-          ✨ TRANSFORM ✨
+          ⚡ AUTOMATE ⚡
         </div>
       </AbsoluteFill>
 
@@ -284,9 +284,9 @@ export const PromptToVideo: React.FC = () => {
           >
             <div
               style={{
-                fontSize: 120,
+                fontSize: 100,
                 fontWeight: "900",
-                background: "linear-gradient(135deg, #ffd89b 0%, #19547b 100%)",
+                background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -294,17 +294,18 @@ export const PromptToVideo: React.FC = () => {
                 textAlign: "center",
               }}
             >
-              YOUR VIDEO
+              AUTOMATED
             </div>
             <div
               style={{
-                fontSize: 60,
+                fontSize: 56,
                 color: "rgba(255, 255, 255, 0.9)",
                 textAlign: "center",
-                fontWeight: "300",
+                fontWeight: "400",
+                lineHeight: 1.4,
               }}
             >
-              Generated from a prompt
+              Sprint Review Workflow
             </div>
           </div>
 
@@ -318,7 +319,7 @@ export const PromptToVideo: React.FC = () => {
               fontWeight: "500",
             }}
           >
-            Powered by Remotion
+            Clear Feedback. Visible Decisions.
           </div>
         </div>
       </AbsoluteFill>
