@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "remotion studio",
-    "build": "remotion render",
+    "start": "remotion studio src/Root.tsx",
+    "build": "remotion render src/Root.tsx PromptToVideo output.mp4",
     "upgrade": "remotion upgrade"
   },
   "keywords": [],

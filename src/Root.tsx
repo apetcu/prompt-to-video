@@ -1,5 +1,6 @@
 import { Composition } from "remotion";
 import { PromptToVideo } from "./PromptToVideo";
+import { registerRoot } from "remotion";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -15,3 +16,5 @@ export const RemotionRoot: React.FC = () => {
     </>
   );
 };
+
+registerRoot(RemotionRoot);

@@ -37,19 +37,24 @@ This will open the Remotion Studio in your browser where you can:
 Render the final video to a file:
 
 ```bash
-npm run build -- PromptToVideo --output=output.mp4
+npm run build
 ```
 
-Optional rendering parameters:
+This will create `output.mp4` in the current directory.
+
+Optional rendering with custom parameters:
 ```bash
+# Custom output file
+npx remotion render src/Root.tsx PromptToVideo my-video.mp4
+
 # Render specific frame range
-npm run build -- PromptToVideo --output=output.mp4 --frames=0-299
+npx remotion render src/Root.tsx PromptToVideo output.mp4 --frames=0-299
 
 # Render with different quality
-npm run build -- PromptToVideo --output=output.mp4 --quality=100
+npx remotion render src/Root.tsx PromptToVideo output.mp4 --quality=100
 
 # Render as image sequence
-npm run build -- PromptToVideo --output=output --sequence
+npx remotion render src/Root.tsx PromptToVideo output --sequence
 ```
 
 ## Project Structure
