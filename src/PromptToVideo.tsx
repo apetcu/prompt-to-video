@@ -7,6 +7,56 @@ import {
   Easing
 } from "remotion";
 
+// SVG Icon Components
+const ClockIcon: React.FC<{ size?: number; color?: string }> = ({ size = 40, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+);
+
+const ChartIcon: React.FC<{ size?: number; color?: string }> = ({ size = 40, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="20" x2="18" y2="10" />
+    <line x1="12" y1="20" x2="12" y2="4" />
+    <line x1="6" y1="20" x2="6" y2="14" />
+  </svg>
+);
+
+const MailIcon: React.FC<{ size?: number; color?: string }> = ({ size = 40, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+    <polyline points="22,6 12,13 2,6" />
+  </svg>
+);
+
+const LightningIcon: React.FC<{ size?: number; color?: string }> = ({ size = 80, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color} stroke="none">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+  </svg>
+);
+
+const CheckIcon: React.FC<{ size?: number; color?: string }> = ({ size = 40, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+const TrendingIcon: React.FC<{ size?: number; color?: string }> = ({ size = 40, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+    <polyline points="17 6 23 6 23 12" />
+  </svg>
+);
+
+const TargetIcon: React.FC<{ size?: number; color?: string }> = ({ size = 40, color = "white" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="12" cy="12" r="6" />
+    <circle cx="12" cy="12" r="2" />
+  </svg>
+);
+
 // Particle component for burst effect
 const Particle: React.FC<{
   x: number;
@@ -97,21 +147,21 @@ export const PromptToVideo: React.FC = () => {
   const { fps, width, height } = useVideoConfig();
 
   // Green gradient background (as specified in requirements)
-  const gradientRotation = interpolate(frame, [0, 450], [0, 360]);
-  const hue1 = interpolate(frame, [0, 450], [120, 160]); // Green hues
-  const hue2 = interpolate(frame, [0, 450], [100, 140]); // Green hues
+  const gradientRotation = interpolate(frame, [0, 540], [0, 360]);
+  const hue1 = interpolate(frame, [0, 540], [120, 160]); // Green hues
+  const hue2 = interpolate(frame, [0, 540], [100, 140]); // Green hues
 
-  // Scene 1: "Type a Prompt" (frames 0-60)
-  const scene1Opacity = interpolate(frame, [0, 20], [0, 1]);
-  const scene1Exit = interpolate(frame, [45, 60], [1, 0]);
+  // Scene 1: "Type a Prompt" (frames 0-75) - Extended +15 frames
+  const scene1Opacity = interpolate(frame, [0, 25], [0, 1]);
+  const scene1Exit = interpolate(frame, [60, 75], [1, 0]);
   const scene1FinalOpacity = Math.min(scene1Opacity, scene1Exit);
 
   const promptSpring = spring({
-    frame: frame - 10,
+    frame: frame - 15,
     fps,
     config: {
-      damping: 100,
-      mass: 0.5,
+      damping: 120,
+      mass: 0.6,
     },
   });
 
@@ -120,78 +170,137 @@ export const PromptToVideo: React.FC = () => {
   // Typing cursor blink
   const cursorBlink = Math.floor(frame / 15) % 2;
 
-  // Scene 2: Problem Statement (frames 60-120)
-  const scene2Opacity = interpolate(frame, [55, 75], [0, 1]);
-  const scene2Exit = interpolate(frame, [105, 120], [1, 0]);
+  // Scene 2: Problem Statement (frames 75-150) - Extended +15 frames
+  const scene2Opacity = interpolate(frame, [70, 95], [0, 1]);
+  const scene2Exit = interpolate(frame, [135, 150], [1, 0]);
   const scene2FinalOpacity = Math.min(scene2Opacity, scene2Exit);
 
   const problemSpring = spring({
-    frame: frame - 65,
+    frame: frame - 80,
     fps,
     config: {
-      damping: 80,
+      damping: 50,
+      stiffness: 100,
     },
   });
 
-  const problemScale = interpolate(problemSpring, [0, 1], [0.8, 1]);
+  const problemSlideX = interpolate(problemSpring, [0, 1], [-200, 0], {
+    easing: Easing.out(Easing.ease),
+  });
 
-  // Scene 3: Transformation effect (frames 120-180)
-  const scene3Opacity = interpolate(frame, [115, 135], [0, 1]);
-  const scene3Exit = interpolate(frame, [165, 180], [1, 0]);
+  // Scene 3: Transformation effect (frames 150-225) - Extended +15 frames
+  const scene3Opacity = interpolate(frame, [145, 170], [0, 1]);
+  const scene3Exit = interpolate(frame, [210, 225], [1, 0]);
   const scene3FinalOpacity = Math.min(scene3Opacity, scene3Exit);
 
-  const burstFrame = 125;
+  const burstFrame = 160;
   const showBurst = frame >= burstFrame && frame < burstFrame + 60;
 
-  // Scene 4: Feature breakdown (frames 180-270)
-  const scene4Opacity = interpolate(frame, [175, 195], [0, 1]);
-  const scene4Exit = interpolate(frame, [255, 270], [1, 0]);
+  const lightningRotate = interpolate(frame, [145, 170], [360, 0], {
+    easing: Easing.out(Easing.back(1.5)),
+  });
+
+  const lightningScale = spring({
+    frame: frame - 150,
+    fps,
+    config: {
+      damping: 30,
+      stiffness: 200,
+      mass: 0.5,
+    },
+  });
+
+  // Scene 4: Feature breakdown (frames 225-330) - Extended +15 frames
+  const scene4Opacity = interpolate(frame, [220, 245], [0, 1]);
+  const scene4Exit = interpolate(frame, [315, 330], [1, 0]);
   const scene4FinalOpacity = Math.min(scene4Opacity, scene4Exit);
 
   const featureSpring = spring({
-    frame: frame - 185,
+    frame: frame - 230,
     fps,
     config: {
-      damping: 60,
+      damping: 40,
+      stiffness: 80,
     },
   });
 
-  const featureScale = interpolate(featureSpring, [0, 1], [0.5, 1]);
+  const featureSlideX = interpolate(featureSpring, [0, 1], [200, 0], {
+    easing: Easing.out(Easing.ease),
+  });
 
-  // Stagger animations for feature items
-  const feature1Opacity = interpolate(frame, [190, 205], [0, 1]);
-  const feature2Opacity = interpolate(frame, [205, 220], [0, 1]);
-  const feature3Opacity = interpolate(frame, [220, 235], [0, 1]);
+  // Stagger animations for feature items - slide in from right individually
+  const feature1Spring = spring({
+    frame: frame - 240,
+    fps,
+    config: { damping: 50, stiffness: 100 },
+  });
+  const feature1SlideX = interpolate(feature1Spring, [0, 1], [100, 0]);
+  const feature1Opacity = interpolate(frame, [240, 260], [0, 1]);
 
-  // Scene 5: Benefits (frames 270-360)
-  const scene5Opacity = interpolate(frame, [265, 285], [0, 1]);
-  const scene5Exit = interpolate(frame, [345, 360], [1, 0]);
+  const feature2Spring = spring({
+    frame: frame - 260,
+    fps,
+    config: { damping: 50, stiffness: 100 },
+  });
+  const feature2SlideX = interpolate(feature2Spring, [0, 1], [100, 0]);
+  const feature2Opacity = interpolate(frame, [260, 280], [0, 1]);
+
+  const feature3Spring = spring({
+    frame: frame - 280,
+    fps,
+    config: { damping: 50, stiffness: 100 },
+  });
+  const feature3SlideX = interpolate(feature3Spring, [0, 1], [100, 0]);
+  const feature3Opacity = interpolate(frame, [280, 300], [0, 1]);
+
+  // Scene 5: Benefits (frames 330-435) - Extended +15 frames
+  const scene5Opacity = interpolate(frame, [325, 350], [0, 1]);
+  const scene5Exit = interpolate(frame, [420, 435], [1, 0]);
   const scene5FinalOpacity = Math.min(scene5Opacity, scene5Exit);
 
   const benefitSpring = spring({
-    frame: frame - 275,
+    frame: frame - 335,
     fps,
     config: {
-      damping: 70,
+      damping: 15,
+      stiffness: 200,
+      mass: 1,
     },
   });
 
-  const benefitScale = interpolate(benefitSpring, [0, 1], [0.6, 1]);
+  const benefitScale = interpolate(benefitSpring, [0, 1], [0, 1]);
 
-  // Scene 6: Final reveal (frames 360-450)
-  const scene6Opacity = interpolate(frame, [355, 380], [0, 1]);
+  // Add subtle bounce to the percentage
+  const percentBounce = spring({
+    frame: frame - 350,
+    fps,
+    config: {
+      damping: 10,
+      stiffness: 300,
+    },
+  });
+
+  const percentScale = interpolate(percentBounce, [0, 1], [0.5, 1]);
+
+  // Scene 6: Final reveal (frames 435-540) - Extended +15 frames
+  const scene6Opacity = interpolate(frame, [430, 460], [0, 1]);
 
   const videoSpring = spring({
-    frame: frame - 360,
+    frame: frame - 435,
     fps,
     config: {
-      damping: 80,
-      mass: 0.8,
+      damping: 60,
+      mass: 1.2,
+      stiffness: 100,
     },
   });
 
-  const videoScale = interpolate(videoSpring, [0, 1], [0.3, 1]);
-  const videoRotate = interpolate(videoSpring, [0, 1], [180, 0]);
+  const videoScale = interpolate(videoSpring, [0, 1], [0.2, 1], {
+    easing: Easing.out(Easing.back(1.2)),
+  });
+  const videoRotateY = interpolate(videoSpring, [0, 1], [360, 0], {
+    easing: Easing.out(Easing.ease),
+  });
 
   // Shine effect rotation
   const shineRotation = (frame * 2) % 360;
@@ -269,7 +378,7 @@ export const PromptToVideo: React.FC = () => {
       >
         <div
           style={{
-            transform: `scale(${problemScale})`,
+            transform: `translateX(${problemSlideX}px)`,
             textAlign: "center",
           }}
         >
@@ -287,7 +396,7 @@ export const PromptToVideo: React.FC = () => {
             style={{
               fontSize: 36,
               color: "rgba(255, 255, 255, 0.9)",
-              lineHeight: 1.6,
+              lineHeight: 1.8,
               fontWeight: "400",
               background: "rgba(255, 255, 255, 0.08)",
               padding: "40px 50px",
@@ -298,11 +407,18 @@ export const PromptToVideo: React.FC = () => {
           >
             Manual sprint review prep takes hours
             <br />
-            ⏰ Gathering updates from team
-            <br />
-            📊 Compiling progress reports
-            <br />
-            📧 Coordinating stakeholders
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "15px", marginTop: "25px" }}>
+              <ClockIcon size={36} color="#34d399" />
+              <span>Gathering updates from team</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "15px", marginTop: "20px" }}>
+              <ChartIcon size={36} color="#34d399" />
+              <span>Compiling progress reports</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "15px", marginTop: "20px" }}>
+              <MailIcon size={36} color="#34d399" />
+              <span>Coordinating stakeholders</span>
+            </div>
           </div>
         </div>
       </AbsoluteFill>
@@ -331,16 +447,27 @@ export const PromptToVideo: React.FC = () => {
         )}
         <div
           style={{
-            fontSize: 110,
-            fontWeight: "900",
-            background: "linear-gradient(135deg, #10b981 0%, #059669 50%, #34d399 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            textShadow: "0 0 80px rgba(16, 185, 129, 0.8)",
+            display: "flex",
+            alignItems: "center",
+            gap: "30px",
+            transform: `scale(${lightningScale}) rotate(${lightningRotate}deg)`,
           }}
         >
-          ⚡ AUTOMATE ⚡
+          <LightningIcon size={90} color="#10b981" />
+          <div
+            style={{
+              fontSize: 110,
+              fontWeight: "900",
+              background: "linear-gradient(135deg, #10b981 0%, #059669 50%, #34d399 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              textShadow: "0 0 80px rgba(16, 185, 129, 0.8)",
+            }}
+          >
+            AUTOMATE
+          </div>
+          <LightningIcon size={90} color="#10b981" />
         </div>
       </AbsoluteFill>
 
@@ -355,7 +482,7 @@ export const PromptToVideo: React.FC = () => {
       >
         <div
           style={{
-            transform: `scale(${featureScale})`,
+            transform: `translateX(${featureSlideX}px)`,
             textAlign: "center",
           }}
         >
@@ -376,6 +503,7 @@ export const PromptToVideo: React.FC = () => {
             <div
               style={{
                 opacity: feature1Opacity,
+                transform: `translateX(${feature1SlideX}px)`,
                 fontSize: 34,
                 color: "white",
                 marginBottom: 30,
@@ -384,13 +512,18 @@ export const PromptToVideo: React.FC = () => {
                 borderRadius: "16px",
                 border: "2px solid rgba(16, 185, 129, 0.3)",
                 fontWeight: "500",
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
               }}
             >
-              ✅ Auto-collect team updates
+              <CheckIcon size={36} color="#10b981" />
+              <span>Auto-collect team updates</span>
             </div>
             <div
               style={{
                 opacity: feature2Opacity,
+                transform: `translateX(${feature2SlideX}px)`,
                 fontSize: 34,
                 color: "white",
                 marginBottom: 30,
@@ -399,13 +532,18 @@ export const PromptToVideo: React.FC = () => {
                 borderRadius: "16px",
                 border: "2px solid rgba(16, 185, 129, 0.3)",
                 fontWeight: "500",
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
               }}
             >
-              📈 Generate progress metrics
+              <TrendingIcon size={36} color="#10b981" />
+              <span>Generate progress metrics</span>
             </div>
             <div
               style={{
                 opacity: feature3Opacity,
+                transform: `translateX(${feature3SlideX}px)`,
                 fontSize: 34,
                 color: "white",
                 padding: "20px 30px",
@@ -413,9 +551,13 @@ export const PromptToVideo: React.FC = () => {
                 borderRadius: "16px",
                 border: "2px solid rgba(16, 185, 129, 0.3)",
                 fontWeight: "500",
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
               }}
             >
-              🎯 Smart stakeholder alerts
+              <TargetIcon size={36} color="#10b981" />
+              <span>Smart stakeholder alerts</span>
             </div>
           </div>
         </div>
@@ -455,6 +597,7 @@ export const PromptToVideo: React.FC = () => {
               fontWeight: "900",
               color: "#10b981",
               marginBottom: 30,
+              transform: `scale(${percentScale})`,
             }}
           >
             80% Time Saved
@@ -480,12 +623,14 @@ export const PromptToVideo: React.FC = () => {
           opacity: scene6Opacity,
           justifyContent: "center",
           alignItems: "center",
+          perspective: "1000px",
         }}
       >
         <div
           style={{
-            transform: `scale(${videoScale}) rotate(${videoRotate}deg)`,
+            transform: `scale(${videoScale}) rotateY(${videoRotateY}deg)`,
             position: "relative",
+            transformStyle: "preserve-3d",
           }}
         >
           {/* Animated shine border */}
